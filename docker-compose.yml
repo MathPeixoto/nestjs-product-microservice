@@ -1,0 +1,18 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: on-failure
+    ports:
+      - "3306:3306"
+#    volumes:
+#      - ./data:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: product_ms
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
