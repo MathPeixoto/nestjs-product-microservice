@@ -2,24 +2,29 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductModule } from './product/product.module';
-import { SequelizeModule } from '@nestjs/sequelize';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+
+import { Product } from './product/entities/product.entity';
+import { Supplier } from './supplier/entities/supplier.entity';
 
 @Module({
   imports: [
     ProductModule,
-    SequelizeModule.forRoot({
-      dialect: 'mysql',
+    TypeOrmModule.forRoot({
+      type: 'mysql',
       host: 'localhost',
       port: 3306,
       username: 'root',
       password: 'root',
       database: 'product_ms',
-      // models: [],
-      autoLoadModels: true,
+      entities: [Product, Supplier],
       synchronize: true,
     }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}

@@ -10,9 +10,9 @@ import {
   Req,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductDto } from './dto/product.dto';
 import { Request } from 'express';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('v1/products')
 export class ProductController {
@@ -20,11 +20,8 @@ export class ProductController {
 
   @HttpCode(201)
   @Post()
-  async create(
-    @Req() request: Request,
-    @Body() createProductDto: CreateProductDto,
-  ) {
-    return await this.productService.create(createProductDto);
+  async create(@Req() request: Request, @Body() productDto: ProductDto) {
+    return await this.productService.create(productDto);
   }
 
   @HttpCode(200)
@@ -34,8 +31,8 @@ export class ProductController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.productService.findOne(id);
   }
 
   @Patch(':id')
