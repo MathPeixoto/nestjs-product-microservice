@@ -1,19 +1,28 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Supplier } from '../../supplier/entities/supplier.entity';
+import { Category } from './category.entity';
 
-@Table
-export class Product extends Model {
-  @Column
+@Entity()
+export class Product {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
   productId: string;
 
-  @Column
+  @Column()
   name: string;
 
-  @Column
+  @Column()
   price: number;
 
-  @Column
-  category: string;
+  @Column({
+    type: 'enum',
+    enum: Category,
+    default: Category.WINE,
+  })
+  category: Category;
 
-  @Column
-  supplier: string;
+  @ManyToOne(() => Supplier, (supplier) => supplier.products, { cascade: true })
+  supplier: Supplier;
 }
