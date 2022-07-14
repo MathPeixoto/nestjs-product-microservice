@@ -2,16 +2,36 @@ services:
   mysql:
     image: mysql:8
     container_name: mysql
-    restart: on-failure
+    restart: always
     ports:
       - "3306:3306"
-#    volumes:
-#      - ./data:
+    volumes:
+      - ./data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: product_ms
     networks:
       - backend
+
+  product_nest:
+    image: node:18.4-alpine
+    container_name: product_nest
+    working_dir: /app
+    build: .
+    restart: always
+    volumes:
+      - .:/app
+    links:
+      - mysql:mysql
+    expose:
+      - "3000"
+    networks:
+      - backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    command: 'yarn start:dev'
 
 networks:
   backend:
